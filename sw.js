@@ -1,7 +1,7 @@
 // Lets DARKSTAR load offline after the first visit.
 // When you change any game file, bump CACHE so players get the new version.
-const CACHE = 'darkstar-v1';
-const FILES = ['./', 'index.html', 'tailwind.css', 'logo.svg', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'darkstar-v2';
+const FILES = ['./', 'index.html', 'tailwind.css', 'logo.svg', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'privacy.html'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

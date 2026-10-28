@@ -259,6 +259,7 @@
         <p>⚔ 3 Base Jobs → 6 Advanced Paths • ⚧ Sex Choice</p>
         <p>👥 Team Building • 🎲 RNG Damage • 💾 Saves on Your Device & File Backup</p>
         <p>💎 Star Gem Upgrades • 📺 Holovid Bonus Boosters • 100% free</p>
+        <p class="pt-2"><a href="privacy.html" class="underline hover:text-gray-400">Privacy</a> • <a href="https://www.stonefamiliamedia.com/" target="_blank" rel="noopener" class="underline hover:text-gray-400">Stone Familia Media</a></p>
       </div>
     </div>
   </div>
@@ -535,6 +536,27 @@
 </div>
 
 <script>
+// ==================== REAL ADS (Google AdSense H5 Games Ads) ====================
+// Paste your AdSense publisher ID here once Google approves you, e.g. 'ca-pub-1234567890123456'.
+// While it is empty, the Holovid Bonus button plays the built-in fictional sponsor transmissions instead.
+const ADSENSE_CLIENT = '';
+// Keep this true while testing (Google shows test ads and nothing is paid). Set to false to go live.
+const ADS_TEST_MODE = true;
+
+const realAdsEnabled = /^ca-pub-\d+$/.test(ADSENSE_CLIENT);
+window.adsbygoogle = window.adsbygoogle || [];
+const adBreak = window.adConfig = function(o) { window.adsbygoogle.push(o); };
+if (realAdsEnabled) {
+  const tag = document.createElement('script');
+  tag.async = true;
+  tag.crossOrigin = 'anonymous';
+  tag.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_CLIENT;
+  tag.setAttribute('data-ad-client', ADSENSE_CLIENT);
+  if (ADS_TEST_MODE) tag.setAttribute('data-adbreak-test', 'on');
+  document.head.appendChild(tag);
+  window.adConfig({ preloadAdBreaks: 'on', sound: 'on' });
+}
+
 // ==================== AUDIO ====================
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -581,6 +603,7 @@ function sfx(name) {
 function toggleMute() {
   muted = !muted;
   document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+  if (realAdsEnabled) window.adConfig({ sound: muted ? 'off' : 'on' });
 }
 
 // ==================== DATA ====================
@@ -1347,7 +1370,7 @@ function openAdCenter() {
       <h3 class="font-orbitron font-bold text-xl neon-text">📺 HOLOVID BONUSES</h3>
       <span class="text-xs text-purple-300">Watched: ${G.adsWatched}</span>
     </div>
-    <p class="text-xs text-gray-400 mb-3">Tune in to short 5-second in-game transmissions from the sponsors of the Darkstar sector (all fictional) to earn bonuses &amp; multipliers.${G.vip ? ' <span class="text-yellow-300 font-bold">(Commander Pass: instant claim!)</span>' : ''}</p>
+    <p class="text-xs text-gray-400 mb-3">${realAdsEnabled ? 'Watch a short ad to earn bonuses &amp; multipliers. Ads keep DARKSTAR free.' : 'Tune in to short 5-second in-game transmissions from the sponsors of the Darkstar sector (all fictional) to earn bonuses &amp; multipliers.'}${G.vip ? ' <span class="text-yellow-300 font-bold">(Commander Pass: instant claim!)</span>' : ''}</p>
     <div class="grid grid-cols-2 gap-2 mb-4 text-xs">
       <div class="bg-purple-950/40 border border-purple-500/30 rounded p-2 text-center">
         <div class="text-gray-400">2x Gold Boost</div>
@@ -1370,7 +1393,7 @@ function openAdCenter() {
         </div>
       </div>
       <button onclick="watchAd('${ad.id}')" class="btn-purple text-xs px-3 py-2 rounded font-orbitron font-bold whitespace-nowrap">
-        ${G.vip ? '⚡ CLAIM' : '▶ WATCH (5s)'}
+        ${G.vip ? '⚡ CLAIM' : realAdsEnabled ? '▶ WATCH AD' : '▶ WATCH (5s)'}
       </button>
     </div>`;
   });
@@ -1386,7 +1409,66 @@ function watchAd(adId) {
     grantAdReward(adId);
     return;
   }
+  if (realAdsEnabled) {
+    playRewardedAd(adId);
+    return;
+  }
+  playHolovidTransmission(adId);
+}
 
+// Shows a real Google rewarded ad. If Google has no ad to show right now,
+// falls back to the built-in transmission so the button always works.
+function playRewardedAd(adId) {
+  let wasRunning = false;
+  let wasMuted = muted;
+  let settled = false;
+  let adStarted = false;
+  const fallback = () => {
+    if (settled) return;
+    settled = true;
+    showModal('');
+    playHolovidTransmission(adId);
+  };
+  // If Google's ad script is blocked or slow (ad blockers, offline), don't leave the player hanging
+  const fallbackTimer = setTimeout(() => { if (!adStarted) fallback(); }, 4000);
+  closeModal();
+  adBreak({
+    type: 'reward',
+    name: 'holovid_' + adId,
+    beforeAd: () => {
+      adStarted = true;
+      wasRunning = battleRunning;
+      if (battleRunning) toggleBattle();
+      wasMuted = muted;
+      muted = true;
+    },
+    afterAd: () => {
+      muted = wasMuted;
+      if (wasRunning && !battleRunning) toggleBattle();
+    },
+    beforeReward: (showAdFn) => showAdFn(),
+    adDismissed: () => {
+      settled = true;
+      toast('Ad closed early, so no bonus this time.');
+    },
+    adViewed: () => {
+      settled = true;
+      grantAdReward(adId);
+    },
+    adBreakDone: (info) => {
+      clearTimeout(fallbackTimer);
+      if (settled) return;
+      const status = info && info.breakStatus;
+      if (status === 'dismissed') { settled = true; return; }
+      if (status === 'viewed') { settled = true; grantAdReward(adId); return; }
+      // notReady, noAdPreloaded, frequencyCapped, timeout, error...
+      fallback();
+    }
+  });
+}
+
+// Built-in 5 second fictional sponsor transmission
+function playHolovidTransmission(adId) {
   const fake = FAKE_ADS[Math.floor(Math.random() * FAKE_ADS.length)];
   let remaining = 5;
   const closeBtn = document.getElementById('modal-close-btn');
