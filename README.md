@@ -17,6 +17,8 @@ A free sci-fi idle RPG that runs entirely in the browser. Build a squad, pick a 
 | `logo.svg`, `icon-*.png` | Logo and home-screen icons |
 | `manifest.webmanifest`, `sw.js` | Home-screen install and offline play |
 | `privacy.html` | Privacy policy (needed for ads) |
+| `og-image.png` | Preview picture shown when the link is shared |
+| `robots.txt`, `sitemap.xml` | Help search engines find the game |
 
 ## Turning on real ads
 
@@ -25,6 +27,8 @@ A free sci-fi idle RPG that runs entirely in the browser. Build a squad, pick a 
 3. If Google has no ad ready, or an ad blocker stops it, the button falls back to the built-in transmission.
 
 `privacy.html` explains the ads to players.
+
+If the game moves to a new web address, update the address in `index.html` (canonical, og:url, og:image, the JSON-LD block), `privacy.html`, `robots.txt` and `sitemap.xml`.
 
 After changing any file, bump `CACHE` in `sw.js` (for example `darkstar-v2`) so players get the new version.
 

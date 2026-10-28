@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jazstone69.github.io/darkstar/sitemap.xml
