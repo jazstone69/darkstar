@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DARKSTAR Idle RPG</title>
+<meta name="description" content="DARKSTAR: a free sci-fi idle RPG. Build your squad, master your path, conquer the void. Plays in your browser, saves on your device.">
+<meta name="theme-color" content="#05050a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DARKSTAR">
+<meta property="og:title" content="DARKSTAR Idle RPG">
+<meta property="og:description" content="Build your squad, master your path, conquer the void. Free to play in your browser.">
+<meta property="og:image" content="icon-512.png">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="tailwind.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+  :root {
+    --neon-blue: #00b4ff;
+    --neon-purple: #8b5cf6;
+    --dark-bg: #05050a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--dark-bg);
+    background-image: 
+      radial-gradient(ellipse at 20% 20%, rgba(0,100,255,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.06) 0%, transparent 50%),
+      linear-gradient(180deg, #05050a 0%, #0a0a15 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .font-orbitron { font-family: 'Orbitron', sans-serif; }
+  .neon-text { text-shadow: 0 0 7px var(--neon-blue), 0 0 14px rgba(0,180,255,0.4); }
+  .neon-text-gold { text-shadow: 0 0 7px #fbbf24, 0 0 14px rgba(251,191,36,0.4); }
+  .neon-border {
+    border: 1px solid rgba(0,180,255,0.4);
+    box-shadow: 0 0 15px rgba(0,180,255,0.15), inset 0 0 15px rgba(0,180,255,0.05);
+  }
+  .neon-border-purple {
+    border: 1px solid rgba(139,92,246,0.5);
+    box-shadow: 0 0 15px rgba(139,92,246,0.2);
+  }
+  .neon-border-gold {
+    border: 1px solid rgba(251,191,36,0.5);
+    box-shadow: 0 0 15px rgba(251,191,36,0.18), inset 0 0 15px rgba(251,191,36,0.05);
+  }
+  .card {
+    background: linear-gradient(145deg, rgba(15,15,30,0.95), rgba(10,10,25,0.98));
+    border-radius: 12px;
+  }
+  .btn-neon {
+    background: linear-gradient(135deg, rgba(0,100,200,0.3), rgba(0,60,150,0.4));
+    border: 1px solid rgba(0,180,255,0.6);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-neon:hover {
+    background: linear-gradient(135deg, rgba(0,140,255,0.5), rgba(0,100,220,0.6));
+    box-shadow: 0 0 20px rgba(0,180,255,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-neon:active { transform: scale(0.97); }
+  .btn-purple {
+    background: linear-gradient(135deg, rgba(100,50,180,0.3), rgba(80,30,150,0.4));
+    border: 1px solid rgba(139,92,246,0.6);
+    transition: all 0.25s ease;
+  }
+  .btn-purple:hover {
+    background: linear-gradient(135deg, rgba(139,92,246,0.5), rgba(100,50,200,0.6));
+    box-shadow: 0 0 20px rgba(139,92,246,0.4);
+    transform: translateY(-1px);
+  }
+  .btn-green {
+    background: linear-gradient(135deg, rgba(0,150,80,0.3), rgba(0,100,60,0.4));
+    border: 1px solid rgba(0,255,150,0.5);
+    transition: all 0.25s ease;
+  }
+  .btn-green:hover {
+    background: linear-gradient(135deg, rgba(0,200,100,0.5), rgba(0,150,80,0.6));
+    box-shadow: 0 0 20px rgba(0,255,150,0.3);
+    transform: translateY(-1px);
+  }
+  .btn-red {
+    background: linear-gradient(135deg, rgba(180,30,50,0.3), rgba(120,20,40,0.4));
+    border: 1px solid rgba(255,50,80,0.5);
+    transition: all 0.25s ease;
+  }
+  .btn-red:hover {
+    background: linear-gradient(135deg, rgba(220,40,70,0.5), rgba(180,30,50,0.6));
+    box-shadow: 0 0 20px rgba(255,50,80,0.3);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, rgba(200,140,0,0.35), rgba(150,90,0,0.45));
+    border: 1px solid rgba(251,191,36,0.65);
+    transition: all 0.25s ease;
+  }
+  .btn-gold:hover {
+    background: linear-gradient(135deg, rgba(245,180,20,0.55), rgba(200,120,0,0.65));
+    box-shadow: 0 0 20px rgba(251,191,36,0.4);
+    transform: translateY(-1px);
+  }
+  .hp-bar {
+    background: linear-gradient(90deg, #1a1a2e, #0f0f1a);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 8px;
+  }
+  .hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff88, #00cc66);
+    transition: width 0.4s ease;
+    border-radius: 4px;
+  }
+  .hp-fill.low { background: linear-gradient(90deg, #ff4444, #cc2222); }
+  .hp-fill.mid { background: linear-gradient(90deg, #ffaa00, #ff8800); }
+  .exp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00b4ff, #0088cc);
+    transition: width 0.5s ease;
+    border-radius: 4px;
+  }
+  .log-entry {
+    animation: fadeSlideIn 0.3s ease;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(0,180,255,0.3); }
+    50% { box-shadow: 0 0 25px rgba(0,180,255,0.6); }
+  }
+  .pulse-glow { animation: pulse-glow 2s infinite; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .float { animation: float 3s ease-in-out infinite; }
+  @keyframes damage-flash {
+    0% { background-color: rgba(255,50,50,0.3); }
+    100% { background-color: transparent; }
+  }
+  .dmg-flash { animation: damage-flash 0.4s ease; }
+  @keyframes levelup {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); filter: brightness(1.5); }
+    100% { transform: scale(1); }
+  }
+  .levelup-anim { animation: levelup 0.6s ease; }
+  .star-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: twinkle var(--dur) ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.9; }
+  }
+  #battle-log {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,180,255,0.3) transparent;
+  }
+  #battle-log::-webkit-scrollbar { width: 4px; }
+  #battle-log::-webkit-scrollbar-thumb { background: rgba(0,180,255,0.4); border-radius: 2px; }
+  .job-card.selected {
+    border-color: #00b4ff !important;
+    box-shadow: 0 0 20px rgba(0,180,255,0.4);
+    background: rgba(0,80,160,0.2);
+  }
+  .gender-btn.selected {
+    border-color: #00b4ff !important;
+    background: rgba(0,100,200,0.4);
+  }
+  .char-card.active-party {
+    border-color: #00ff88 !important;
+    box-shadow: 0 0 12px rgba(0,255,136,0.3);
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .modal-overlay {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
+  }
+  input, select {
+    background: rgba(10,10,30,0.8);
+    border: 1px solid rgba(0,180,255,0.3);
+    color: white;
+    outline: none;
+  }
+  input:focus, select:focus {
+    border-color: #00b4ff;
+    box-shadow: 0 0 10px rgba(0,180,255,0.3);
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(0,140,255,0.4), rgba(0,90,200,0.5));
+    border-color: #00b4ff;
+    color: #fff;
+  }
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(400%); }
+  }
+  .ad-scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(180deg, transparent, rgba(0,180,255,0.18), transparent);
+    animation: scanline 2.2s linear infinite;
+    pointer-events: none;
+  }
+  @media (max-width: 768px) {
+    .grid-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body class="text-gray-100">
+<div class="star-bg" id="stars"></div>
+
+<div id="app" class="relative z-10 max-w-6xl mx-auto px-3 py-4 min-h-screen">
+
+  <!-- START SCREEN -->
+  <div id="start-screen" class="screen active">
+    <div class="flex flex-col items-center justify-center min-h-[90vh] text-center">
+      <img src="logo.svg" alt="DARKSTAR" class="w-48 md:w-64 h-auto float mb-4 drop-shadow-2xl" style="filter: drop-shadow(0 0 20px rgba(0,180,255,0.5));">
+      <h1 class="font-orbitron text-4xl md:text-6xl font-black neon-text tracking-wider mb-2">DARKSTAR</h1>
+      <p class="text-blue-300/80 text-lg md:text-xl tracking-widest mb-1 font-orbitron">IDLE RPG</p>
+      <p class="text-gray-500 text-sm mb-10 max-w-md">Forge your legend among the stars. Build your team, master your path, conquer the void.</p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
+        <button onclick="startNewGame()" class="btn-neon font-orbitron font-bold py-3 px-8 rounded-lg text-lg flex-1 tracking-wide">NEW GAME</button>
+        <button id="continue-btn" onclick="loadGame()" class="btn-purple font-orbitron font-bold py-3 px-8 rounded-lg text-lg flex-1 tracking-wide hidden">CONTINUE</button>
+      </div>
+      <div class="mt-3 w-full max-w-sm">
+        <button onclick="triggerFileImport()" class="btn-neon w-full py-2 px-4 rounded-lg text-xs font-orbitron tracking-wider text-blue-300">📂 LOAD SAVE FILE</button>
+        <input type="file" id="save-file-input" accept=".json,.dstar" class="hidden" onchange="handleFileImport(event)">
+      </div>
+      <p id="save-info" class="text-gray-600 text-xs mt-4"></p>
+
+      <div class="mt-10 text-gray-600 text-xs space-y-1">
+        <p>⚔ 3 Base Jobs → 6 Advanced Paths • ⚧ Sex Choice</p>
+        <p>👥 Team Building • 🎲 RNG Damage • 💾 Saves on Your Device & File Backup</p>
+        <p>💎 Star Gem Upgrades • 📺 Holovid Bonus Boosters • 100% free</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATION SCREEN -->
+  <div id="creation-screen" class="screen">
+    <div class="max-w-2xl mx-auto py-6">
+      <div class="text-center mb-8">
+        <img src="logo.svg" alt="Logo" class="w-20 h-auto mx-auto mb-3 opacity-80">
+        <h2 class="font-orbitron text-2xl neon-text tracking-wide">CREATE YOUR LEGEND</h2>
+      </div>
+
+      <!-- Name -->
+      <div class="card neon-border p-5 mb-4">
+        <label class="block text-blue-300 text-sm font-semibold mb-2 tracking-wide">CALLSIGN</label>
+        <input type="text" id="char-name" maxlength="16" placeholder="Enter name..." class="w-full px-4 py-3 rounded-lg text-lg font-orbitron" value="Nova">
+      </div>
+
+      <!-- Sex / Identity -->
+      <div class="card neon-border p-5 mb-4">
+        <label class="block text-blue-300 text-sm font-semibold mb-3 tracking-wide">SEX / IDENTITY</label>
+        <div class="grid grid-cols-3 gap-3">
+          <button onclick="selectGender('Male')" class="gender-btn btn-neon py-3 rounded-lg font-semibold" data-g="Male">♂ Male</button>
+          <button onclick="selectGender('Female')" class="gender-btn btn-neon py-3 rounded-lg font-semibold" data-g="Female">♀ Female</button>
+          <button onclick="selectGender('Other')" class="gender-btn btn-neon py-3 rounded-lg font-semibold" data-g="Other">⬡ Non-Binary</button>
+        </div>
+      </div>
+
+      <!-- Job -->
+      <div class="card neon-border p-5 mb-6">
+        <label class="block text-blue-300 text-sm font-semibold mb-3 tracking-wide">CHOOSE YOUR PATH (3 BASE JOBS → 2 SUB-JOBS EACH)</label>
+        <div class="grid gap-3" id="job-select">
+          <div onclick="selectJob('warrior')" class="job-card card neon-border p-4 cursor-pointer hover:bg-blue-900/20 transition" data-job="warrior">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">⚔️</span>
+              <div>
+                <div class="font-orbitron font-bold text-lg text-blue-200">WARRIOR</div>
+                <div class="text-gray-400 text-sm">Frontline fighter. High HP & Defense. Sub-jobs: <span class="text-blue-300">🛡️ Knight</span> or <span class="text-red-300">🪓 Berserker</span>.</div>
+                <div class="text-xs text-blue-400/70 mt-1">HP ★★★★ | ATK ★★★ | DEF ★★★★ | SPD ★★</div>
+              </div>
+            </div>
+          </div>
+          <div onclick="selectJob('mage')" class="job-card card neon-border p-4 cursor-pointer hover:bg-blue-900/20 transition" data-job="mage">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🔮</span>
+              <div>
+                <div class="font-orbitron font-bold text-lg text-purple-200">MAGE</div>
+                <div class="text-gray-400 text-sm">Arcane powerhouse. Devastating magic. Sub-jobs: <span class="text-orange-300">🔥 Elementalist</span> or <span class="text-purple-300">💀 Necromancer</span>.</div>
+                <div class="text-xs text-purple-400/70 mt-1">HP ★★ | ATK ★★★★★ | DEF ★★ | SPD ★★★</div>
+              </div>
+            </div>
+          </div>
+          <div onclick="selectJob('rogue')" class="job-card card neon-border p-4 cursor-pointer hover:bg-blue-900/20 transition" data-job="rogue">
+            <div class="flex items-center gap-3">
+              <span class="text-3xl">🗡️</span>
+              <div>
+                <div class="font-orbitron font-bold text-lg text-cyan-200">ROGUE</div>
+                <div class="text-gray-400 text-sm">Shadow operative. Speed & crits. Sub-jobs: <span class="text-cyan-300">🥷 Assassin</span> or <span class="text-green-300">🏹 Ranger</span>.</div>
+                <div class="text-xs text-cyan-400/70 mt-1">HP ★★★ | ATK ★★★★ | DEF ★★ | SPD ★★★★★</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="confirmCreation()" id="create-btn" class="btn-green w-full font-orbitron font-bold py-4 rounded-lg text-xl tracking-wider opacity-50 pointer-events-none">BEGIN JOURNEY</button>
+      <button onclick="showScreen('start-screen')" class="w-full mt-3 text-gray-500 hover:text-gray-300 py-2 text-sm">← Back</button>
+    </div>
+  </div>
+
+  <!-- MAIN GAME SCREEN -->
+  <div id="game-screen" class="screen">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+      <div class="flex items-center gap-3">
+        <img src="logo.svg" alt="Logo" class="w-12 h-auto">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-orbitron font-bold text-lg neon-text tracking-wide">DARKSTAR</span>
+            <span id="vip-badge" class="hidden text-[10px] font-orbitron font-bold px-2 py-0.5 rounded bg-yellow-500/20 border border-yellow-400 text-yellow-300">👑 COMMANDER</span>
+          </div>
+          <div class="text-xs text-gray-500">Stage <span id="hud-stage">1</span> • <span id="hud-time">00:00</span></div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 text-sm flex-wrap">
+        <div class="card neon-border px-3 py-1.5 flex items-center gap-1.5" title="Gold">
+          <span class="text-yellow-400">◈</span>
+          <span id="hud-gold" class="font-orbitron font-bold text-yellow-300">0</span>
+        </div>
+        <div onclick="openPremiumStore()" class="card neon-border px-3 py-1.5 flex items-center gap-1.5 cursor-pointer hover:bg-blue-900/20 transition" title="Star Gems (tap to open Upgrades)">
+          <span class="text-blue-400">◆</span>
+          <span id="hud-gems" class="font-orbitron font-bold text-blue-300">0</span>
+          <span class="text-xs text-green-400 font-bold ml-1">+</span>
+        </div>
+        <button onclick="openAdCenter()" class="btn-purple px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1" title="Holovid Bonuses">
+          📺 <span class="hidden sm:inline">BONUS</span><span id="ad-boost-indicator" class="hidden text-yellow-300">⚡</span>
+        </button>
+        <button onclick="openPremiumStore()" class="btn-gold px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1" title="Star Gem Upgrades">
+          💎 <span class="hidden sm:inline">UPGRADE</span>
+        </button>
+        <button onclick="openSaveManager()" class="btn-neon px-3 py-1.5 rounded text-xs font-bold" title="Save Manager">💾</button>
+        <button onclick="toggleMute()" id="mute-btn" class="btn-neon px-3 py-1.5 rounded text-xs" title="Mute">🔊</button>
+      </div>
+    </div>
+
+    <!-- Active Boosts Bar -->
+    <div id="active-boosts-bar" class="hidden mb-3 card neon-border-purple px-3 py-2 flex items-center justify-between flex-wrap gap-2 text-xs">
+      <div class="flex items-center gap-2 flex-wrap" id="boost-tags"></div>
+      <button onclick="openAdCenter()" class="text-purple-300 hover:text-white underline text-xs">Extend Boosts →</button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      
+      <!-- LEFT: Party -->
+      <div class="lg:col-span-1 space-y-3">
+        <div class="card neon-border p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-orbitron font-bold text-sm tracking-wide text-blue-300">⚔ PARTY (<span id="party-count">1/3</span>)</h3>
+            <button onclick="openRecruitModal()" class="btn-green text-xs px-2 py-1 rounded font-bold">+ RECRUIT</button>
+          </div>
+          <div id="party-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Player detailed stats -->
+        <div class="card neon-border p-4" id="selected-char-panel">
+          <h3 class="font-orbitron font-bold text-sm tracking-wide text-blue-300 mb-3">📊 OPERATIVE STATS</h3>
+          <div id="char-detail"></div>
+        </div>
+      </div>
+
+      <!-- CENTER: Battle -->
+      <div class="lg:col-span-1 space-y-3">
+        <div class="card neon-border p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-orbitron font-bold text-sm tracking-wide text-red-300">☠ COMBAT ZONE</h3>
+            <div class="flex gap-1.5">
+              <button id="speed-toggle" onclick="cycleSpeed()" class="btn-neon text-xs px-2 py-1 rounded font-bold" title="Combat Speed">1x</button>
+              <button id="battle-toggle" onclick="toggleBattle()" class="btn-green text-xs px-3 py-1 rounded font-bold">▶ AUTO</button>
+            </div>
+          </div>
+
+          <!-- Enemy -->
+          <div id="enemy-panel" class="card bg-red-950/30 border border-red-500/30 p-3 mb-3 rounded-lg">
+            <div class="flex justify-between items-start mb-1">
+              <div>
+                <div id="enemy-name" class="font-orbitron font-bold text-red-300">Waiting...</div>
+                <div id="enemy-level" class="text-xs text-gray-500">Lv.1</div>
+              </div>
+              <div id="enemy-emoji" class="text-3xl">👾</div>
+            </div>
+            <div class="hp-bar mt-2 mb-1"><div id="enemy-hp-bar" class="hp-fill" style="width:100%"></div></div>
+            <div class="flex justify-between text-xs text-gray-400">
+              <span id="enemy-hp-text">0/0</span>
+              <span id="enemy-atk-text">ATK 0</span>
+            </div>
+          </div>
+
+          <!-- Battle Log -->
+          <div id="battle-log" class="h-48 overflow-y-auto text-xs space-y-1 bg-black/40 rounded p-2 font-mono"></div>
+
+          <div class="mt-3 grid grid-cols-2 gap-2">
+            <button onclick="manualAttack()" class="btn-neon py-2 rounded text-sm font-bold">⚔ STRIKE</button>
+            <button onclick="useSkill()" class="btn-purple py-2 rounded text-sm font-bold">✨ SKILL</button>
+          </div>
+        </div>
+
+        <!-- Stage progress -->
+        <div class="card neon-border p-3">
+          <div class="flex justify-between text-xs mb-1">
+            <span class="text-gray-400">Stage Progress</span>
+            <span id="stage-kills" class="text-blue-300">0/10</span>
+          </div>
+          <div class="hp-bar h-2"><div id="stage-bar" class="exp-fill" style="width:0%"></div></div>
+        </div>
+
+        <!-- Sponsored Ad Banner Quick Card -->
+        <div class="card neon-border-purple p-3 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📺</span>
+            <div>
+              <div class="font-orbitron font-bold text-xs text-purple-200">HOLOVID BONUSES</div>
+              <div class="text-[11px] text-gray-400">Tune in to a 5s transmission for 2x Gold, 2x DMG or Gems!</div>
+            </div>
+          </div>
+          <button onclick="openAdCenter()" class="btn-purple text-xs px-3 py-1.5 rounded font-bold whitespace-nowrap">TUNE IN</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Actions & Info -->
+      <div class="lg:col-span-1 space-y-3">
+        <!-- Job Advancement -->
+        <div class="card neon-border p-4" id="job-adv-panel">
+          <h3 class="font-orbitron font-bold text-sm tracking-wide text-purple-300 mb-2">🌟 SUB-JOB ADVANCEMENT</h3>
+          <div id="advancement-info" class="text-sm text-gray-400">Reach Level 10 to unlock subclass paths.</div>
+          <div id="subjob-choices" class="hidden mt-3 space-y-2"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card neon-border p-4">
+          <h3 class="font-orbitron font-bold text-sm tracking-wide text-blue-300 mb-3">⚡ COMMAND DECK</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="healParty()" class="btn-green py-2 rounded text-xs font-bold">💚 HEAL (50◈)</button>
+            <button onclick="openShop()" class="btn-neon py-2 rounded text-xs font-bold">🛒 GEAR SHOP</button>
+            <button onclick="openPremiumStore()" class="btn-gold py-2 rounded text-xs font-bold">💎 UPGRADES</button>
+            <button onclick="openAdCenter()" class="btn-purple py-2 rounded text-xs font-bold">📺 BONUSES</button>
+            <button onclick="prestigeCheck()" class="btn-purple py-2 rounded text-xs font-bold">🌌 ASCEND</button>
+            <button onclick="openSaveManager()" class="btn-neon py-2 rounded text-xs font-bold">💾 SAVE</button>
+          </div>
+        </div>
+
+        <!-- Idle Stats -->
+        <div class="card neon-border p-4">
+          <h3 class="font-orbitron font-bold text-sm tracking-wide text-blue-300 mb-3">📈 TELEMETRY</h3>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div class="bg-black/30 rounded p-2 text-center">
+              <div class="text-gray-500 text-xs">Kills</div>
+              <div id="stat-kills" class="font-orbitron font-bold text-lg text-red-300">0</div>
+            </div>
+            <div class="bg-black/30 rounded p-2 text-center">
+              <div class="text-gray-500 text-xs">Gold Earned</div>
+              <div id="stat-gold" class="font-orbitron font-bold text-lg text-yellow-300">0</div>
+            </div>
+            <div class="bg-black/30 rounded p-2 text-center">
+              <div class="text-gray-500 text-xs">DPS</div>
+              <div id="stat-dps" class="font-orbitron font-bold text-lg text-blue-300">0</div>
+            </div>
+            <div class="bg-black/30 rounded p-2 text-center">
+              <div class="text-gray-500 text-xs">Highest Stage</div>
+              <div id="stat-stage" class="font-orbitron font-bold text-lg text-purple-300">1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster (inactive members) -->
+        <div class="card neon-border p-4">
+          <h3 class="font-orbitron font-bold text-sm tracking-wide text-gray-400 mb-2">👥 RESERVE ROSTER</h3>
+          <div id="roster-list" class="space-y-1 text-sm"></div>
+          <p class="text-xs text-gray-600 mt-2">Click reserve operative to swap into active party</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME OVER / ASCENSION SCREEN -->
+  <div id="ascend-screen" class="screen">
+    <div class="flex flex-col items-center justify-center min-h-[80vh] text-center max-w-lg mx-auto">
+      <div class="text-6xl mb-4">🌌</div>
+      <h2 class="font-orbitron text-3xl neon-text mb-2">ASCENSION</h2>
+      <p class="text-gray-400 mb-6">You have transcended. Prestige to gain permanent power and restart the climb stronger. Your first Ascension also earns the 👑 Commander Pass.</p>
+      <div class="card neon-border p-6 w-full mb-6 text-left space-y-2">
+        <div class="flex justify-between"><span class="text-gray-400">Current Stage</span><span id="asc-stage" class="font-bold text-blue-300">0</span></div>
+        <div class="flex justify-between"><span class="text-gray-400">Total Kills</span><span id="asc-kills" class="font-bold text-red-300">0</span></div>
+        <div class="flex justify-between"><span class="text-gray-400">Prestige Level</span><span id="asc-prest" class="font-bold text-purple-300">0</span></div>
+        <div class="flex justify-between"><span class="text-gray-400">Bonus ATK%</span><span id="asc-bonus" class="font-bold text-green-300">+0%</span></div>
+      </div>
+      <button onclick="doPrestige()" class="btn-purple font-orbitron font-bold py-3 px-10 rounded-lg text-lg mb-3">ASCEND NOW</button>
+      <button onclick="showScreen('game-screen')" class="text-gray-500 hover:text-gray-300 text-sm">Continue Climbing ←</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODALS -->
+<div id="modal-overlay" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+  <div id="modal-content" class="card neon-border p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto relative">
+    <button id="modal-close-btn" onclick="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-white text-xl">×</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
+  <div class="card neon-border px-6 py-3 font-orbitron text-sm tracking-wide shadow-2xl" id="toast-msg"></div>
+</div>
+
+<script>
+// ==================== AUDIO ====================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let muted = false;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+}
+
+function playTone(freq, dur, type='square', vol=0.08) {
+  if (muted || !audioCtx) return;
+  try {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g);
+    g.connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime + dur);
+  } catch(e) {}
+}
+
+function sfx(name) {
+  initAudio();
+  const sounds = {
+    hit: () => { playTone(150, 0.08, 'square', 0.06); playTone(80, 0.12, 'sawtooth', 0.04); },
+    crit: () => { playTone(400, 0.1); playTone(600, 0.15, 'square', 0.07); },
+    hurt: () => playTone(100, 0.15, 'sawtooth', 0.07),
+    level: () => { playTone(300,0.1); setTimeout(()=>playTone(450,0.1),80); setTimeout(()=>playTone(600,0.2),160); },
+    gold: () => playTone(800, 0.08, 'sine', 0.05),
+    skill: () => { playTone(200,0.1,'sine'); playTone(400,0.2,'triangle',0.06); },
+    click: () => playTone(600, 0.04, 'sine', 0.04),
+    win: () => { playTone(400,0.1); playTone(500,0.1); playTone(700,0.25); },
+    recruit: () => { playTone(350,0.1); playTone(500,0.15); },
+    advance: () => { [300,400,500,700,900].forEach((f,i)=>setTimeout(()=>playTone(f,0.12,'sine',0.06),i*70)); },
+    cash: () => { [500,650,850,1100].forEach((f,i)=>setTimeout(()=>playTone(f,0.1,'triangle',0.07),i*60)); }
+  };
+  if (sounds[name]) sounds[name]();
+}
+
+function toggleMute() {
+  muted = !muted;
+  document.getElementById('mute-btn').textContent = muted ? '🔇' : '🔊';
+}
+
+// ==================== DATA ====================
+const JOBS = {
+  warrior: {
+    name: 'Warrior', emoji: '⚔️', color: 'blue',
+    base: { hp: 120, atk: 14, def: 12, spd: 8, crit: 5 },
+    growth: { hp: 18, atk: 3, def: 2.5, spd: 0.8 },
+    skill: { name: 'Shield Bash', mult: 1.8, desc: 'Heavy blow + high impact' },
+    subs: {
+      knight: {
+        name: 'Knight', emoji: '🛡️',
+        bonus: { hp: 40, atk: 5, def: 15, spd: 0, crit: 0 },
+        skill: { name: 'Holy Strike', mult: 2.2, desc: 'Radiant fortress strike' },
+        desc: 'Unyielding guardian. Massive defense & fortification.'
+      },
+      berserker: {
+        name: 'Berserker', emoji: '🪓',
+        bonus: { hp: 20, atk: 20, def: 0, spd: 3, crit: 10 },
+        skill: { name: 'Blood Rage', mult: 2.8, desc: 'Reckless devastating cleave' },
+        desc: 'Frenzied destroyer. Pure relentless offense.'
+      }
+    }
+  },
+  mage: {
+    name: 'Mage', emoji: '🔮', color: 'purple',
+    base: { hp: 70, atk: 22, def: 5, spd: 10, crit: 8 },
+    growth: { hp: 10, atk: 5, def: 1, spd: 1.2 },
+    skill: { name: 'Arcane Bolt', mult: 2.0, desc: 'Piercing magical projectile' },
+    subs: {
+      elementalist: {
+        name: 'Elementalist', emoji: '🔥',
+        bonus: { hp: 10, atk: 25, def: 2, spd: 2, crit: 5 },
+        skill: { name: 'Meteor', mult: 3.0, desc: 'Calls down cosmic fire' },
+        desc: 'Master of the elements. Extreme burst damage.'
+      },
+      necromancer: {
+        name: 'Necromancer', emoji: '💀',
+        bonus: { hp: 25, atk: 15, def: 5, spd: 1, crit: 8 },
+        skill: { name: 'Soul Drain', mult: 2.4, desc: 'Drains enemy life force (30% heal)' },
+        desc: 'Commands death. Lifesteal on skill.'
+      }
+    }
+  },
+  rogue: {
+    name: 'Rogue', emoji: '🗡️', color: 'cyan',
+    base: { hp: 90, atk: 16, def: 7, spd: 16, crit: 18 },
+    growth: { hp: 12, atk: 3.5, def: 1.5, spd: 2 },
+    skill: { name: 'Backstab', mult: 2.3, desc: 'High crit ambush attack' },
+    subs: {
+      assassin: {
+        name: 'Assassin', emoji: '🥷',
+        bonus: { hp: 10, atk: 12, def: 2, spd: 8, crit: 20 },
+        skill: { name: 'Death Mark', mult: 3.2, desc: 'Lethal vital-point execution' },
+        desc: 'Silent killer. Critical mastery.'
+      },
+      ranger: {
+        name: 'Ranger', emoji: '🏹',
+        bonus: { hp: 20, atk: 15, def: 5, spd: 5, crit: 10 },
+        skill: { name: 'Arrow Storm', mult: 2.5, desc: 'Volley of plasma arrows' },
+        desc: 'Precision marksman. Balanced & deadly.'
+      }
+    }
+  }
+};
+
+const ENEMIES = [
+  { name: 'Voidling', emoji: '👾', hpM: 1.0, atkM: 0.8 },
+  { name: 'Shadow Wisp', emoji: '👻', hpM: 0.7, atkM: 1.1 },
+  { name: 'Crystal Golem', emoji: '🪨', hpM: 1.5, atkM: 0.7 },
+  { name: 'Darkstar Drake', emoji: '🐉', hpM: 1.3, atkM: 1.2 },
+  { name: 'Neon Stalker', emoji: '🐺', hpM: 1.0, atkM: 1.3 },
+  { name: 'Plasma Horror', emoji: '🦑', hpM: 1.4, atkM: 1.0 },
+  { name: 'Cyber Phantom', emoji: '💀', hpM: 0.9, atkM: 1.4 },
+  { name: 'Abyss Titan', emoji: '👹', hpM: 2.0, atkM: 1.1 },
+  { name: 'Star Devourer', emoji: '🌌', hpM: 1.8, atkM: 1.5 },
+  { name: 'Omega Wraith', emoji: '👁️', hpM: 1.6, atkM: 1.6 }
+];
+
+const SHOP_ITEMS = [
+  { id: 'atk_boost', name: 'Plasma Edge', desc: '+5 ATK permanently to selected', cost: 200, type: 'stat', stat: 'atk', val: 5 },
+  { id: 'hp_boost', name: 'Nano Armor', desc: '+30 Max HP permanently', cost: 180, type: 'stat', stat: 'maxHp', val: 30 },
+  { id: 'def_boost', name: 'Shield Matrix', desc: '+4 DEF permanently', cost: 160, type: 'stat', stat: 'def', val: 4 },
+  { id: 'crit_boost', name: 'Targeting Chip', desc: '+5% Crit permanently', cost: 250, type: 'stat', stat: 'crit', val: 5 },
+  { id: 'spd_boost', name: 'Swift Boots', desc: '+3 SPD permanently', cost: 150, type: 'stat', stat: 'spd', val: 3 },
+  { id: 'heal_kit', name: 'Med-Pack x5', desc: 'Full heal entire party', cost: 80, type: 'heal' },
+  { id: 'exp_boost', name: 'Data Core', desc: '+500 EXP to selected', cost: 300, type: 'exp', val: 500 },
+  { id: 'gem_pouch', name: 'Star Fragment', desc: '+3 Gems', cost: 500, type: 'gems', val: 3 }
+];
+
+// Star Gem Upgrades
+const GEM_UPGRADES = [
+  { id: 'perm_gold', name: 'Quantum Greed Core', desc: '+25% Permanent Gold Gain per level', baseCost: 5, costMult: 1.6, maxLvl: 10 },
+  { id: 'perm_atk', name: 'Darkstar Overclock', desc: '+20% Permanent Party ATK per level', baseCost: 6, costMult: 1.6, maxLvl: 10 },
+  { id: 'perm_exp', name: 'Neural Synapse Link', desc: '+25% Permanent EXP Gain per level', baseCost: 5, costMult: 1.6, maxLvl: 10 },
+  { id: 'auto_skill', name: 'Tactical AI Module', desc: 'Automatically casts Skills in Auto-Battle', baseCost: 12, costMult: 1, maxLvl: 1 },
+  { id: 'party_slot', name: 'Command Squad Expansion', desc: 'Expand Active Party limit from 3 to 4 Operatives', baseCost: 25, costMult: 1, maxLvl: 1 }
+];
+
+
+// Holovid Bonus Options (in-game parody sponsors, no real ads)
+const AD_OPTIONS = [
+  { id: 'ad_gold_boost', name: '2x Gold Rush (3 Min)', desc: 'Doubles all Gold dropped by enemies for 3 minutes (stackable).', icon: '🪙', rewardText: '+180s 2x Gold' },
+  { id: 'ad_dmg_boost', name: '2x Overdrive Damage (3 Min)', desc: 'Doubles all Party Attack & Skill damage for 3 minutes.', icon: '⚡', rewardText: '+180s 2x DMG' },
+  { id: 'ad_supply', name: 'Emergency Supply Drop', desc: 'Instant Gold cache (scales with Stage) + Full Party Heal.', icon: '📦', rewardText: 'Gold + Full Heal' },
+  { id: 'ad_gems', name: 'Sponsor Gem Transmission', desc: 'Receive 5 Free Star Gems for the Upgrade Store.', icon: '💎', rewardText: '+5 Star Gems' }
+];
+
+const FAKE_ADS = [
+  { brand: 'CYBERCOLA ZERO-G', slogan: 'Quench Your Thirst in the Vacuum of Space!', emoji: '🥤', sub: 'Now with 40% more neon electrolytes.' },
+  { brand: 'HYPERDRIVE MOTORS', slogan: 'Why Walk When You Can Warp?', emoji: '🚀', sub: '0% APR for the first 12 lightyears.' },
+  { brand: 'NEURO-NOODLES', slogan: 'Download Flavor Directly to Your Cortex!', emoji: '🍜', sub: 'Side effects may include speaking binary.' },
+  { brand: 'AEGIS MECH INSURANCE', slogan: 'Did a Void Titan Step on Your Cruiser?', emoji: '🛡️', sub: 'We cover 99% of interdimensional kaiju incidents.' }
+];
+
+// Escape player-typed text (names) before putting it into HTML
+function esc(str) {
+  return String(str ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+// ==================== STATE ====================
+let G = null; // game state
+let selectedCharId = null;
+let battleRunning = false;
+let battleInterval = null;
+let gameTimer = null;
+let adTimerInterval = null;
+let creation = { gender: null, job: null };
+let dmgWindow = [];
+let battleSpeed = 1; // 1x, 2x, 3x
+
+function defaultState() {
+  return {
+    gold: 50,
+    gems: 5,
+    stage: 1,
+    stageKills: 0,
+    prestige: 0,
+    playTime: 0,
+    totalKills: 0,
+    totalGold: 0,
+    highestStage: 1,
+    party: [],
+    roster: [],
+    enemy: null,
+    nextCharId: 1,
+    skillCooldowns: {},
+    upgrades: {
+      perm_gold: 0,
+      perm_atk: 0,
+      perm_exp: 0,
+      auto_skill: 0,
+      party_slot: 0
+    },
+    vip: false,
+    starterBought: false,
+    adBoosts: {
+      gold2x: 0,
+      dmg2x: 0
+    },
+    adsWatched: 0,
+    version: 2
+  };
+}
+
+function sanitizeState() {
+  if (!G) return;
+  if (!G.upgrades) G.upgrades = { perm_gold: 0, perm_atk: 0, perm_exp: 0, auto_skill: 0, party_slot: 0 };
+  if (!G.adBoosts) G.adBoosts = { gold2x: 0, dmg2x: 0 };
+  if (typeof G.vip === 'undefined') G.vip = false;
+  if (typeof G.starterBought === 'undefined') G.starterBought = false;
+  if (typeof G.adsWatched === 'undefined') G.adsWatched = 0;
+}
+
+function getMaxPartySize() {
+  return 3 + (G?.upgrades?.party_slot || 0);
+}
+
+// ==================== CHARACTER ====================
+function createCharacter(name, gender, jobKey, isLeader = false) {
+  const job = JOBS[jobKey];
+  const c = {
+    id: G.nextCharId++,
+    name: name || 'Operative',
+    gender,
+    job: jobKey,
+    subjob: null,
+    level: 1,
+    exp: 0,
+    expToLevel: 50,
+    maxHp: job.base.hp,
+    hp: job.base.hp,
+    atk: job.base.atk,
+    def: job.base.def,
+    spd: job.base.spd,
+    crit: job.base.crit,
+    isLeader,
+    skillCd: 0
+  };
+  // Prestige bonus
+  if (G.prestige > 0) {
+    const bonus = 1 + G.prestige * 0.08;
+    c.maxHp = Math.floor(c.maxHp * bonus);
+    c.hp = c.maxHp;
+    c.atk = Math.floor(c.atk * bonus);
+    c.def = Math.floor(c.def * bonus);
+  }
+  return c;
+}
+
+function getJobDisplay(c) {
+  if (c.subjob) {
+    const sub = JOBS[c.job].subs[c.subjob];
+    return sub.emoji + ' ' + sub.name;
+  }
+  return JOBS[c.job].emoji + ' ' + JOBS[c.job].name;
+}
+
+function getSkill(c) {
+  if (c.subjob) return JOBS[c.job].subs[c.subjob].skill;
+  return JOBS[c.job].skill;
+}
+
+function calcExpNeeded(level) {
+  return Math.floor(50 * Math.pow(1.35, level - 1));
+}
+
+function gainExp(c, amount) {
+  const expMult = 1 + (G.upgrades?.perm_exp || 0) * 0.25;
+  c.exp += Math.floor(amount * expMult);
+  let leveled = false;
+  while (c.exp >= c.expToLevel) {
+    c.exp -= c.expToLevel;
+    c.level++;
+    c.expToLevel = calcExpNeeded(c.level);
+    const g = JOBS[c.job].growth;
+    c.maxHp += Math.floor(g.hp + Math.random() * 4);
+    c.atk += Math.floor(g.atk + Math.random() * 1.5);
+    c.def += Math.floor(g.def + Math.random() * 1);
+    c.spd += Math.floor(g.spd + Math.random() * 0.5);
+    c.hp = c.maxHp;
+    leveled = true;
+    sfx('level');
+    addLog(`⭐ ${c.name} reached Level ${c.level}!`, 'text-yellow-300');
+  }
+  if (leveled) {
+    checkAdvancement(c);
+    const el = document.querySelector(`[data-cid="${c.id}"]`);
+    if (el) { el.classList.add('levelup-anim'); setTimeout(() => el.classList.remove('levelup-anim'), 600); }
+  }
+  return leveled;
+}
+
+function checkAdvancement(c) {
+  if (!c.subjob && c.level >= 10) {
+    addLog(`🌟 ${c.name} can advance their job path!`, 'text-purple-300');
+    updateAdvancementPanel();
+  }
+}
+
+function advanceJob(cId, subKey) {
+  const c = findChar(cId);
+  if (!c || c.subjob || c.level < 10) return;
+  const sub = JOBS[c.job].subs[subKey];
+  c.subjob = subKey;
+  c.maxHp += sub.bonus.hp;
+  c.hp = c.maxHp;
+  c.atk += sub.bonus.atk;
+  c.def += sub.bonus.def;
+  c.spd += sub.bonus.spd;
+  c.crit += sub.bonus.crit;
+  sfx('advance');
+  addLog(`✨ ${c.name} advanced to ${sub.emoji} ${sub.name}!`, 'text-purple-200');
+  toast(`${c.name} is now a ${sub.name}!`);
+  updateAdvancementPanel();
+  renderParty();
+  renderCharDetail();
+  saveGame();
+}
+
+// ==================== COMBAT ====================
+function getPartyAtkMultiplier() {
+  let mult = 1 + (G.upgrades?.perm_atk || 0) * 0.2;
+  if (G.vip) mult *= 1.5;
+  if (G.adBoosts?.dmg2x > 0) mult *= 2;
+  return mult;
+}
+
+function getGoldMultiplier() {
+  let mult = 1 + (G.upgrades?.perm_gold || 0) * 0.25;
+  if (G.vip) mult *= 1.5;
+  if (G.adBoosts?.gold2x > 0) mult *= 2;
+  return mult;
+}
+
+function spawnEnemy() {
+  const tier = Math.min(Math.floor((G.stage - 1) / 3), ENEMIES.length - 1);
+  const pool = ENEMIES.slice(0, Math.min(tier + 3, ENEMIES.length));
+  const tmpl = pool[Math.floor(Math.random() * pool.length)];
+  const scale = 1 + (G.stage - 1) * 0.35 + G.prestige * 0.1;
+  const isBoss = G.stageKills >= 9;
+  const bossMult = isBoss ? 2.2 : 1;
+  const hp = Math.floor(40 * tmpl.hpM * scale * bossMult * (0.9 + Math.random() * 0.2));
+  const atk = Math.floor(8 * tmpl.atkM * scale * (isBoss ? 1.5 : 1) * (0.9 + Math.random() * 0.2));
+  G.enemy = {
+    name: (isBoss ? 'BOSS ' : '') + tmpl.name,
+    emoji: isBoss ? '☠️' : tmpl.emoji,
+    maxHp: hp,
+    hp: hp,
+    atk: atk,
+    def: Math.floor(3 * scale * (isBoss ? 1.5 : 1)),
+    level: G.stage + (isBoss ? 2 : 0),
+    isBoss
+  };
+  renderEnemy();
+  if (isBoss) addLog(`⚠️ BOSS APPEARED: ${G.enemy.name}!`, 'text-red-400 font-bold');
+  else addLog(`A wild ${G.enemy.name} appears!`, 'text-gray-400');
+}
+
+function randomDmg(baseAtk, def, critChance) {
+  // Random generated damage variance (75% to 125% + dice roll)
+  const variance = 0.75 + Math.random() * 0.5;
+  const flatRng = Math.floor(Math.random() * 4);
+  let dmg = Math.max(1, Math.floor(baseAtk * variance + flatRng - def * 0.4));
+  const isCrit = Math.random() * 100 < critChance;
+  if (isCrit) dmg = Math.floor(dmg * (1.6 + Math.random() * 0.5));
+  return { dmg, isCrit };
+}
+
+function getAliveParty() {
+  return G.party.filter(c => c.hp > 0);
+}
+
+function partyAttack() {
+  if (!G.enemy || G.enemy.hp <= 0) return;
+  const alive = getAliveParty();
+  if (alive.length === 0) {
+    onPartyWipe();
+    return;
+  }
+
+  // If Tactical AI Module unlocked, auto-fire ready skills
+  if (G.upgrades?.auto_skill > 0) {
+    const skillReady = alive.find(c => c.skillCd <= 0);
+    if (skillReady && Math.random() < 0.45) {
+      useSkill(true);
+      return;
+    }
+  }
+
+  const atkMult = getPartyAtkMultiplier();
+  // Sort by speed for attack order
+  const attackers = [...alive].sort((a, b) => b.spd - a.spd);
+  attackers.forEach(c => {
+    if (!G.enemy || G.enemy.hp <= 0) return;
+    if (c.skillCd > 0) c.skillCd--;
+    const { dmg, isCrit } = randomDmg(c.atk * atkMult, G.enemy.def, c.crit);
+    G.enemy.hp = Math.max(0, G.enemy.hp - dmg);
+    trackDps(dmg);
+    const critTag = isCrit ? ' 💥CRIT!' : '';
+    addLog(`${JOBS[c.job].emoji} ${c.name} hits for ${dmg}${critTag}`, isCrit ? 'text-yellow-300' : 'text-blue-200');
+    sfx(isCrit ? 'crit' : 'hit');
+    flashEnemy();
+  });
+
+  renderEnemy();
+
+  if (G.enemy.hp <= 0) {
+    onEnemyDefeated();
+  } else {
+    setTimeout(enemyAttack, Math.floor(300 / battleSpeed));
+  }
+}
+
+function enemyAttack() {
+  if (!G.enemy || G.enemy.hp <= 0) return;
+  const alive = getAliveParty();
+  if (alive.length === 0) return;
+
+  const target = alive.reduce((a, b) => a.hp < b.hp ? a : b);
+  const { dmg, isCrit } = randomDmg(G.enemy.atk, target.def, 5);
+  target.hp = Math.max(0, target.hp - dmg);
+  addLog(`${G.enemy.emoji} ${G.enemy.name} strikes ${target.name} for ${dmg}${isCrit?' 💥':''}`, 'text-red-300');
+  sfx('hurt');
+  flashChar(target.id);
+  renderParty();
+  renderCharDetail();
+
+  if (target.hp <= 0) {
+    addLog(`💀 ${target.name} is down!`, 'text-red-500');
+    if (getAliveParty().length === 0) onPartyWipe();
+  }
+}
+
+function manualAttack() {
+  initAudio();
+  if (!G.enemy || G.enemy.hp <= 0) {
+    spawnEnemy();
+    return;
+  }
+  partyAttack();
+  renderAll();
+}
+
+function useSkill(fromAuto = false) {
+  initAudio();
+  const alive = getAliveParty();
+  if (alive.length === 0 || !G.enemy || G.enemy.hp <= 0) return;
+
+  const ready = alive.find(c => c.skillCd <= 0);
+  if (!ready) {
+    if (!fromAuto) toast('Skills recharging…');
+    return;
+  }
+  const skill = getSkill(ready);
+  const atkMult = getPartyAtkMultiplier();
+  const { dmg, isCrit } = randomDmg(ready.atk * atkMult * skill.mult, G.enemy.def, ready.crit + 10);
+  G.enemy.hp = Math.max(0, G.enemy.hp - dmg);
+  trackDps(dmg);
+  ready.skillCd = 3;
+
+  // Necromancer lifesteal
+  if (ready.subjob === 'necromancer') {
+    const heal = Math.floor(dmg * 0.3);
+    ready.hp = Math.min(ready.maxHp, ready.hp + heal);
+    addLog(`💚 Soul Drain heals ${ready.name} for ${heal}`, 'text-green-300');
+  }
+
+  addLog(`✨ ${ready.name} uses ${skill.name} for ${dmg}!${isCrit?' 💥':''}`, 'text-purple-300');
+  sfx('skill');
+  flashEnemy();
+  renderEnemy();
+  renderParty();
+
+  if (G.enemy.hp <= 0) onEnemyDefeated();
+  else if (!fromAuto) setTimeout(enemyAttack, 350);
+}
+
+function onEnemyDefeated() {
+  const e = G.enemy;
+  const goldMult = getGoldMultiplier();
+  const baseGold = Math.floor((8 + G.stage * 3) * (e.isBoss ? 4 : 1) * (0.8 + Math.random() * 0.4) * goldMult);
+  const baseExp = Math.floor((12 + G.stage * 5) * (e.isBoss ? 3 : 1) * (0.8 + Math.random() * 0.4));
+  G.gold += baseGold;
+  G.totalGold += baseGold;
+  G.totalKills++;
+  G.stageKills++;
+
+  sfx('win');
+  addLog(`☠️ ${e.name} defeated! +${baseGold}◈ +${baseExp} EXP`, 'text-green-300');
+  sfx('gold');
+
+  // Distribute exp
+  const alive = getAliveParty();
+  const expEach = Math.floor(baseExp / Math.max(1, alive.length));
+  alive.forEach(c => gainExp(c, expEach + Math.floor(Math.random() * 5)));
+
+  // Rare gem drop
+  if (Math.random() < 0.08 + (e.isBoss ? 0.3 : 0)) {
+    G.gems++;
+    addLog(`💎 Found a Star Gem!`, 'text-blue-300');
+  }
+
+  if (G.stageKills >= 10) {
+    G.stage++;
+    G.stageKills = 0;
+    if (G.stage > G.highestStage) G.highestStage = G.stage;
+    addLog(`🚀 Advanced to Stage ${G.stage}!`, 'text-yellow-200 font-bold');
+    toast(`Stage ${G.stage} Unlocked!`);
+    G.party.forEach(c => { c.hp = Math.min(c.maxHp, c.hp + Math.floor(c.maxHp * 0.3)); });
+  }
+
+  updateHUD();
+  renderParty();
+
+  G.enemy = null;
+  renderEnemy();
+  setTimeout(() => {
+    if (battleRunning) spawnEnemy();
+  }, Math.floor(600 / battleSpeed));
+
+  saveGame();
+}
+
+let recovering = false;
+function onPartyWipe() {
+  if (recovering) return;
+  recovering = true;
+  addLog(`💀 PARTY WIPED! Recovering...`, 'text-red-500 font-bold');
+  battleRunning = false;
+  clearInterval(battleInterval);
+  battleInterval = null;
+  document.getElementById('battle-toggle').textContent = '▶ AUTO';
+  document.getElementById('battle-toggle').className = 'btn-green text-xs px-3 py-1 rounded font-bold';
+
+  const loss = Math.floor(G.gold * 0.1);
+  G.gold = Math.max(0, G.gold - loss);
+  setTimeout(() => {
+    recovering = false;
+    G.party.forEach(c => { c.hp = Math.floor(c.maxHp * 0.5); });
+    addLog(`💚 Party revived (lost ${loss}◈). Ready to fight!`, 'text-green-400');
+    renderParty();
+    updateHUD();
+    spawnEnemy();
+  }, 2000);
+}
+
+function restartBattleInterval() {
+  if (!battleRunning) return;
+  clearInterval(battleInterval);
+  battleInterval = setInterval(() => {
+    if (G.enemy && G.enemy.hp > 0) partyAttack();
+    else if (!G.enemy) spawnEnemy();
+    renderParty();
+    updateHUD();
+  }, Math.floor(1600 / battleSpeed));
+}
+
+function toggleBattle() {
+  initAudio();
+  sfx('click');
+  battleRunning = !battleRunning;
+  const btn = document.getElementById('battle-toggle');
+  if (battleRunning) {
+    btn.textContent = '⏸ PAUSE';
+    btn.className = 'btn-red text-xs px-3 py-1 rounded font-bold';
+    if (!G.enemy || G.enemy.hp <= 0) spawnEnemy();
+    restartBattleInterval();
+  } else {
+    btn.textContent = '▶ AUTO';
+    btn.className = 'btn-green text-xs px-3 py-1 rounded font-bold';
+    clearInterval(battleInterval);
+    battleInterval = null;
+  }
+}
+
+function cycleSpeed() {
+  sfx('click');
+  battleSpeed = battleSpeed === 1 ? 2 : battleSpeed === 2 ? 3 : 1;
+  document.getElementById('speed-toggle').textContent = battleSpeed + 'x';
+  if (battleRunning) restartBattleInterval();
+}
+
+function trackDps(dmg) {
+  const now = Date.now();
+  dmgWindow.push({ dmg, t: now });
+  dmgWindow = dmgWindow.filter(d => now - d.t < 5000);
+  const total = dmgWindow.reduce((s, d) => s + d.dmg, 0);
+  const dps = Math.floor(total / 5);
+  document.getElementById('stat-dps').textContent = dps;
+}
+
+// ==================== TEAM / RECRUIT ====================
+function findChar(id) {
+  return G.party.find(c => c.id === id) || G.roster.find(c => c.id === id);
+}
+
+function openRecruitModal() {
+  sfx('click');
+  if (G.party.length + G.roster.length >= 8) {
+    toast('Roster full (max 8 operatives)!');
+    return;
+  }
+  const cost = 100 + (G.party.length + G.roster.length) * 75;
+  let html = `<h3 class="font-orbitron font-bold text-xl neon-text mb-4">RECRUIT OPERATIVE</h3>
+    <p class="text-sm text-gray-400 mb-4">Cost: <span class="text-yellow-300 font-bold">${cost}◈</span></p>
+    <div class="mb-3">
+      <label class="text-xs text-blue-300">NAME</label>
+      <input id="r-name" class="w-full px-3 py-2 rounded mt-1" maxlength="14" placeholder="Name..." value="Agent${G.nextCharId}">
+    </div>
+    <div class="mb-3">
+      <label class="text-xs text-blue-300">SEX / IDENTITY</label>
+      <div class="grid grid-cols-3 gap-2 mt-1">
+        <button onclick="document.querySelectorAll('.rg').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')" class="rg gender-btn btn-neon py-2 rounded text-sm selected" data-g="Male">♂ Male</button>
+        <button onclick="document.querySelectorAll('.rg').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')" class="rg gender-btn btn-neon py-2 rounded text-sm" data-g="Female">♀ Female</button>
+        <button onclick="document.querySelectorAll('.rg').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')" class="rg gender-btn btn-neon py-2 rounded text-sm" data-g="Other">⬡ Non-Binary</button>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="text-xs text-blue-300">JOB</label>
+      <div class="grid gap-2 mt-1">
+        ${Object.entries(JOBS).map(([k,j]) => `
+          <button onclick="document.querySelectorAll('.rj').forEach(b=>b.classList.remove('selected'));this.classList.add('selected')" class="rj job-card card neon-border p-2 text-left text-sm ${k==='warrior'?'selected':''}" data-job="${k}">
+            ${j.emoji} <strong>${j.name}</strong> <span class="text-xs text-gray-400">(${Object.values(j.subs).map(s=>s.name).join(' / ')})</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <button onclick="doRecruit(${cost})" class="btn-green w-full py-3 rounded-lg font-orbitron font-bold">RECRUIT — ${cost}◈</button>`;
+  showModal(html);
+}
+
+function doRecruit(cost) {
+  if (G.gold < cost) {
+    toast('Not enough gold!');
+    return;
+  }
+  const name = document.getElementById('r-name').value.trim() || 'Agent';
+  const genderEl = document.querySelector('.rg.selected');
+  const jobEl = document.querySelector('.rj.selected');
+  const gender = genderEl ? genderEl.dataset.g : 'Other';
+  const job = jobEl ? jobEl.dataset.job : 'warrior';
+
+  G.gold -= cost;
+  const c = createCharacter(name, gender, job, false);
+  if (G.party.length < getMaxPartySize()) {
+    G.party.push(c);
+  } else {
+    G.roster.push(c);
+  }
+  sfx('recruit');
+  toast(`${c.name} joined the ranks!`);
+  closeModal();
+  renderAll();
+  saveGame();
+}
+
+function swapToParty(id) {
+  const maxParty = getMaxPartySize();
+  if (G.party.length >= maxParty) {
+    toast(`Party full (max ${maxParty})! Move someone to reserve or get Squad Expansion.`);
+    return;
+  }
+  const idx = G.roster.findIndex(c => c.id === id);
+  if (idx < 0) return;
+  const c = G.roster.splice(idx, 1)[0];
+  G.party.push(c);
+  sfx('click');
+  renderAll();
+  saveGame();
+}
+
+function moveToRoster(id) {
+  if (G.party.length <= 1) {
+    toast('Need at least 1 in party!');
+    return;
+  }
+  const idx = G.party.findIndex(c => c.id === id);
+  if (idx < 0) return;
+  const c = G.party.splice(idx, 1)[0];
+  G.roster.push(c);
+  if (selectedCharId === id) selectedCharId = G.party[0]?.id;
+  sfx('click');
+  renderAll();
+  saveGame();
+}
+
+function selectChar(id) {
+  selectedCharId = id;
+  sfx('click');
+  renderParty();
+  renderCharDetail();
+  updateAdvancementPanel();
+}
+
+// ==================== SHOP / UPGRADE PAY / ADS ====================
+function openShop() {
+  sfx('click');
+  let html = `<h3 class="font-orbitron font-bold text-xl neon-text mb-1">DARKSTAR GEAR SHOP</h3>
+    <p class="text-xs text-gray-500 mb-4">Gold: <span class="text-yellow-300 font-bold">${G.gold}◈</span> • Gems: <span class="text-blue-300 font-bold">${G.gems}◆</span></p>
+    <div class="space-y-2">`;
+  SHOP_ITEMS.forEach(item => {
+    html += `<div class="card neon-border p-3 flex justify-between items-center gap-2">
+      <div>
+        <div class="font-bold text-sm">${item.name}</div>
+        <div class="text-xs text-gray-400">${item.desc}</div>
+      </div>
+      <button onclick="buyItem('${item.id}')" class="btn-neon text-xs px-3 py-2 rounded font-bold whitespace-nowrap">${item.cost}◈</button>
+    </div>`;
+  });
+  html += `</div>
+    <p class="text-xs text-gray-600 mt-3">Stat items apply to currently selected character.</p>`;
+  showModal(html);
+}
+
+function buyItem(id) {
+  const item = SHOP_ITEMS.find(i => i.id === id);
+  if (!item || G.gold < item.cost) {
+    toast('Not enough gold!');
+    return;
+  }
+  const c = findChar(selectedCharId) || G.party[0];
+  if (!c && item.type === 'stat') {
+    toast('Select a character!');
+    return;
+  }
+  G.gold -= item.cost;
+  sfx('gold');
+
+  if (item.type === 'stat') {
+    if (item.stat === 'maxHp') { c.maxHp += item.val; c.hp += item.val; }
+    else c[item.stat] = (c[item.stat] || 0) + item.val;
+    toast(`${item.name} applied to ${c.name}!`);
+  } else if (item.type === 'heal') {
+    G.party.forEach(ch => ch.hp = ch.maxHp);
+    G.roster.forEach(ch => ch.hp = ch.maxHp);
+    toast('Party fully healed!');
+  } else if (item.type === 'exp') {
+    gainExp(c, item.val);
+    toast(`+${item.val} EXP to ${c.name}!`);
+  } else if (item.type === 'gems') {
+    G.gems += item.val;
+    toast(`+${item.val} Gems!`);
+  }
+  renderAll();
+  saveGame();
+  openShop();
+}
+
+// STAR GEM UPGRADES
+function openPremiumStore() {
+  sfx('click');
+  let html = `<div class="flex items-center justify-between mb-2">
+      <h3 class="font-orbitron font-bold text-xl neon-text-gold">💎 STAR GEM UPGRADES</h3>
+    </div>
+    <div class="flex items-center justify-between text-xs bg-black/40 p-2 rounded mb-3 border border-blue-500/20">
+      <span>Balance: <strong class="text-yellow-300">${G.gold}◈</strong> | <strong class="text-blue-300">${G.gems}◆ Gems</strong></span>
+      <span class="text-gray-400">${G.vip ? '👑 Commander Pass' : 'Ascend once to earn 👑'}</span>
+    </div>
+    <div class="space-y-2.5">`;
+  GEM_UPGRADES.forEach(u => {
+    const lvl = G.upgrades[u.id] || 0;
+    const isMax = lvl >= u.maxLvl;
+    const cost = Math.floor(u.baseCost * Math.pow(u.costMult, lvl));
+    html += `<div class="card neon-border p-3 flex justify-between items-center gap-2">
+      <div>
+        <div class="font-bold text-sm text-blue-200">${u.name} <span class="text-xs text-purple-300">[Lv.${lvl}/${u.maxLvl}]</span></div>
+        <div class="text-xs text-gray-400">${u.desc}</div>
+      </div>
+      ${isMax
+        ? `<span class="text-xs font-orbitron font-bold text-green-400 px-3 py-1.5 bg-green-950/40 border border-green-500/30 rounded">MAXED</span>`
+        : `<button onclick="buyGemUpgrade('${u.id}')" class="btn-purple text-xs px-3 py-2 rounded font-bold whitespace-nowrap">${cost}◆</button>`
+      }
+    </div>`;
+  });
+  html += `</div>
+    <p class="text-[11px] text-gray-500 mt-3 text-center">Earn Star Gems from bosses, Holovid Bonuses, the Gear Shop and Ascending. Everything in DARKSTAR is free.</p>`;
+  showModal(html);
+}
+function buyGemUpgrade(id) {
+  const u = GEM_UPGRADES.find(x => x.id === id);
+  if (!u) return;
+  const lvl = G.upgrades[id] || 0;
+  if (lvl >= u.maxLvl) return;
+  const cost = Math.floor(u.baseCost * Math.pow(u.costMult, lvl));
+  if (G.gems < cost) {
+    toast('Not enough Star Gems! Defeat bosses or tune in to a Holovid Bonus.');
+    return;
+  }
+  G.gems -= cost;
+  G.upgrades[id] = lvl + 1;
+  sfx('advance');
+  toast(`Upgraded ${u.name} to Lv.${G.upgrades[id]}!`);
+  addLog(`💎 Upgraded ${u.name} (Lv.${G.upgrades[id]})`, 'text-blue-300');
+  renderAll();
+  saveGame();
+  openPremiumStore('upgrades');
+}
+
+// ==================== AD CENTER & SIMULATED ADS ====================
+function openAdCenter() {
+  sfx('click');
+  let html = `<div class="flex items-center justify-between mb-2">
+      <h3 class="font-orbitron font-bold text-xl neon-text">📺 HOLOVID BONUSES</h3>
+      <span class="text-xs text-purple-300">Watched: ${G.adsWatched}</span>
+    </div>
+    <p class="text-xs text-gray-400 mb-3">Tune in to short 5-second in-game transmissions from the sponsors of the Darkstar sector (all fictional) to earn bonuses &amp; multipliers.${G.vip ? ' <span class="text-yellow-300 font-bold">(Commander Pass: instant claim!)</span>' : ''}</p>
+    <div class="grid grid-cols-2 gap-2 mb-4 text-xs">
+      <div class="bg-purple-950/40 border border-purple-500/30 rounded p-2 text-center">
+        <div class="text-gray-400">2x Gold Boost</div>
+        <div class="font-orbitron font-bold text-yellow-300">${G.adBoosts.gold2x > 0 ? formatSec(G.adBoosts.gold2x) : 'INACTIVE'}</div>
+      </div>
+      <div class="bg-purple-950/40 border border-purple-500/30 rounded p-2 text-center">
+        <div class="text-gray-400">2x DMG Overdrive</div>
+        <div class="font-orbitron font-bold text-red-300">${G.adBoosts.dmg2x > 0 ? formatSec(G.adBoosts.dmg2x) : 'INACTIVE'}</div>
+      </div>
+    </div>
+    <div class="space-y-2.5">`;
+
+  AD_OPTIONS.forEach(ad => {
+    html += `<div class="card neon-border-purple p-3 flex justify-between items-center gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="text-2xl">${ad.icon}</span>
+        <div>
+          <div class="font-bold text-sm text-purple-200">${ad.name}</div>
+          <div class="text-xs text-gray-400">${ad.desc}</div>
+        </div>
+      </div>
+      <button onclick="watchAd('${ad.id}')" class="btn-purple text-xs px-3 py-2 rounded font-orbitron font-bold whitespace-nowrap">
+        ${G.vip ? '⚡ CLAIM' : '▶ WATCH (5s)'}
+      </button>
+    </div>`;
+  });
+  html += `</div>`;
+  showModal(html);
+}
+
+function watchAd(adId) {
+  initAudio();
+  sfx('click');
+  // If VIP, skip countdown
+  if (G.vip) {
+    grantAdReward(adId);
+    return;
+  }
+
+  const fake = FAKE_ADS[Math.floor(Math.random() * FAKE_ADS.length)];
+  let remaining = 5;
+  const closeBtn = document.getElementById('modal-close-btn');
+  if (closeBtn) closeBtn.classList.add('hidden');
+
+  const renderAdFrame = (sec) => {
+    document.getElementById('modal-body').innerHTML = `
+      <div class="relative overflow-hidden rounded-lg border border-blue-400/50 bg-black p-6 text-center">
+        <div class="ad-scanline"></div>
+        <div class="flex justify-between items-center text-[10px] text-blue-400 font-orbitron mb-4">
+          <span>HOLOVID TRANSMISSION (FICTIONAL SPONSOR)</span>
+          <span class="px-2 py-0.5 rounded bg-blue-900/50">${sec > 0 ? `Reward in ${sec}s` : 'TRANSMISSION COMPLETE'}</span>
+        </div>
+        <div class="text-6xl my-4 float">${fake.emoji}</div>
+        <div class="font-orbitron font-black text-xl neon-text mb-1">${fake.brand}</div>
+        <div class="text-sm text-blue-200 font-semibold mb-2">"${fake.slogan}"</div>
+        <div class="text-xs text-gray-500 mb-6">${fake.sub}</div>
+        <div class="hp-bar h-2 mb-4"><div class="exp-fill" style="width:${((5 - sec) / 5) * 100}%"></div></div>
+        ${sec > 0
+          ? `<button disabled class="btn-neon opacity-50 w-full py-2.5 rounded font-orbitron text-xs">PLEASE WAIT (${sec}s)...</button>`
+          : `<button onclick="grantAdReward('${adId}')" class="btn-green w-full py-3 rounded-lg font-orbitron font-bold text-sm pulse-glow">🎁 CLAIM REWARD</button>`
+        }
+      </div>`;
+  };
+
+  renderAdFrame(remaining);
+  clearInterval(adTimerInterval);
+  adTimerInterval = setInterval(() => {
+    remaining--;
+    playTone(500 + (5 - remaining) * 60, 0.05, 'sine', 0.03);
+    if (remaining <= 0) {
+      clearInterval(adTimerInterval);
+      if (closeBtn) closeBtn.classList.remove('hidden');
+      renderAdFrame(0);
+    } else {
+      renderAdFrame(remaining);
+    }
+  }, 1000);
+}
+
+function grantAdReward(adId) {
+  const closeBtn = document.getElementById('modal-close-btn');
+  if (closeBtn) closeBtn.classList.remove('hidden');
+  G.adsWatched = (G.adsWatched || 0) + 1;
+  sfx('cash');
+
+  if (adId === 'ad_gold_boost') {
+    G.adBoosts.gold2x = (G.adBoosts.gold2x || 0) + 180;
+    toast('2x Gold Rush active for +3 minutes!');
+    addLog('📺 Holovid Bonus: 2x Gold Rush activated (+180s)!', 'text-yellow-300');
+  } else if (adId === 'ad_dmg_boost') {
+    G.adBoosts.dmg2x = (G.adBoosts.dmg2x || 0) + 180;
+    toast('2x Overdrive Damage active for +3 minutes!');
+    addLog('📺 Holovid Bonus: 2x Party Damage activated (+180s)!', 'text-red-300');
+  } else if (adId === 'ad_supply') {
+    const bonusGold = Math.floor(150 + G.stage * 45);
+    G.gold += bonusGold;
+    G.totalGold += bonusGold;
+    G.party.forEach(c => c.hp = c.maxHp);
+    G.roster.forEach(c => c.hp = c.maxHp);
+    toast(`Supply Drop: +${bonusGold}◈ & Party Fully Healed!`);
+    addLog(`📦 Supply Drop: +${bonusGold}◈ & Full Party Heal!`, 'text-green-300');
+  } else if (adId === 'ad_gems') {
+    G.gems += 5;
+    toast('+5 Star Gems added!');
+    addLog('💎 Holovid Bonus: Received +5 Star Gems!', 'text-blue-300');
+  }
+
+  renderAll();
+  saveGame();
+  openAdCenter();
+}
+
+function healParty() {
+  if (G.gold < 50) {
+    toast('Need 50 gold!');
+    return;
+  }
+  G.gold -= 50;
+  G.party.forEach(c => c.hp = c.maxHp);
+  sfx('skill');
+  toast('Party healed!');
+  addLog('💚 Party restored to full HP', 'text-green-300');
+  renderAll();
+  saveGame();
+}
+
+function prestigeCheck() {
+  if (G.stage < 15) {
+    toast(`Reach Stage 15 to Ascend (currently ${G.stage})`);
+    return;
+  }
+  document.getElementById('asc-stage').textContent = G.stage;
+  document.getElementById('asc-kills').textContent = G.totalKills;
+  document.getElementById('asc-prest').textContent = G.prestige;
+  document.getElementById('asc-bonus').textContent = `+${G.prestige * 8}%`;
+  showScreen('ascend-screen');
+}
+
+function doPrestige() {
+  const oldPrestige = G.prestige;
+  const keepGems = G.gems;
+  const keepHighest = G.highestStage;
+  const playTime = G.playTime;
+  const totalKills = G.totalKills;
+  const totalGold = G.totalGold;
+  const keepUpgrades = { ...G.upgrades };
+  const keepVip = G.vip;
+  const keepStarter = G.starterBought;
+  const keepAds = G.adsWatched;
+
+  const leader = G.party.find(c => c.isLeader) || G.party[0];
+  const name = leader.name;
+  const gender = leader.gender;
+  const job = leader.job;
+
+  G = defaultState();
+  G.prestige = oldPrestige + 1;
+  G.gems = keepGems + 3;
+  G.highestStage = keepHighest;
+  G.playTime = playTime;
+  G.totalKills = totalKills;
+  G.totalGold = totalGold;
+  G.upgrades = keepUpgrades;
+  G.vip = true; // Commander Pass is earned by Ascending
+  if (!keepVip) toast('👑 Commander Pass earned: 1.5x Gold & ATK, instant Holovid Bonuses!');
+  G.starterBought = keepStarter;
+  G.adsWatched = keepAds;
+
+  const c = createCharacter(name, gender, job, true);
+  G.party = [c];
+  selectedCharId = c.id;
+
+  sfx('advance');
+  if (keepVip) toast(`Ascended to Prestige ${G.prestige}! +8% permanent power`);
+  showScreen('game-screen');
+  spawnEnemy();
+  renderAll();
+  startTimer();
+  saveGame();
+}
+
+// ==================== LOCAL PC SAVE / LOAD / FILE DOWNLOAD ====================
+function saveGame(manual = false) {
+  if (!G) return;
+  try {
+    localStorage.setItem('darkstar_idle_save', JSON.stringify(G));
+    if (manual) toast('Progress saved!');
+  } catch(e) {
+    console.warn('Save failed', e);
+  }
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem('darkstar_idle_save');
+    if (!raw) { toast('No save found'); return; }
+    G = JSON.parse(raw);
+    sanitizeState();
+    if (!G.party || G.party.length === 0) { toast('Corrupt save'); return; }
+    selectedCharId = G.party[0].id;
+    showScreen('game-screen');
+    spawnEnemy();
+    renderAll();
+    startTimer();
+    toast('Welcome back, operative.');
+    sfx('click');
+    setTimeout(() => { if (!battleRunning) toggleBattle(); }, 500);
+  } catch(e) {
+    toast('Failed to load save');
+    console.error(e);
+  }
+}
+
+function openSaveManager() {
+  if (!G) return;
+  saveGame();
+  const data = btoa(unescape(encodeURIComponent(JSON.stringify(G))));
+  showModal(`<h3 class="font-orbitron font-bold text-lg neon-text mb-2">💾 SAVE MANAGER</h3>
+    <p class="text-xs text-gray-400 mb-3">Darkstar runs 100% on your device, with no account and no server. Progress saves automatically in this browser. Download a <code class="text-blue-300">.json</code> backup file to move your game to another device.</p>
+    <div class="grid grid-cols-2 gap-2 mb-4">
+      <button onclick="saveGame(true)" class="btn-green py-2.5 rounded font-orbitron font-bold text-xs">💾 SAVE NOW</button>
+      <button onclick="downloadSaveFile()" class="btn-neon py-2.5 rounded font-orbitron font-bold text-xs">📥 DOWNLOAD BACKUP</button>
+    </div>
+    <div class="mb-4">
+      <button onclick="triggerFileImport()" class="btn-purple w-full py-2.5 rounded font-orbitron font-bold text-xs">📂 LOAD BACKUP FILE (.JSON)</button>
+    </div>
+    <hr class="border-gray-800 my-3">
+    <label class="block text-xs text-blue-300 font-bold mb-1">EXPORT SAVE STRING</label>
+    <textarea class="w-full h-20 text-xs p-2 rounded bg-black/50 border border-blue-500/30 text-gray-300" readonly id="export-data">${data}</textarea>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('export-data').value);toast('Copied to clipboard!')" class="btn-neon w-full mt-1.5 py-1.5 rounded text-xs font-bold">📋 COPY CODE</button>
+    <label class="block text-xs text-purple-300 font-bold mt-3 mb-1">IMPORT SAVE STRING</label>
+    <textarea id="import-data" class="w-full h-16 text-xs p-2 rounded bg-black/50 border border-blue-500/30" placeholder="Paste save code here..."></textarea>
+    <button onclick="importSave()" class="btn-purple w-full mt-1.5 py-1.5 rounded text-xs font-bold">IMPORT CODE</button>`);
+}
+
+function downloadSaveFile() {
+  if (!G) return;
+  saveGame();
+  const leaderName = (G.party?.[0]?.name || 'operative').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  const filename = `darkstar_save_${leaderName}_stage${G.stage}.json`;
+  const blob = new Blob([JSON.stringify(G, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  sfx('win');
+  toast(`Downloaded ${filename}!`);
+}
+
+function triggerFileImport() {
+  const input = document.getElementById('save-file-input');
+  if (input) {
+    input.value = '';
+    input.click();
+  }
+}
+
+function handleFileImport(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.party || !Array.isArray(parsed.party)) throw new Error('Invalid save structure');
+      G = parsed;
+      sanitizeState();
+      selectedCharId = G.party[0].id;
+      closeModal();
+      showScreen('game-screen');
+      spawnEnemy();
+      renderAll();
+      startTimer();
+      saveGame();
+      sfx('win');
+      toast('Backup file loaded!');
+    } catch(err) {
+      toast('Invalid Save File!');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function importSave() {
+  try {
+    const raw = document.getElementById('import-data').value.trim();
+    const jsonStr = decodeURIComponent(escape(atob(raw)));
+    const data = JSON.parse(jsonStr);
+    if (!data.party) throw new Error('Invalid');
+    G = data;
+    sanitizeState();
+    selectedCharId = G.party[0].id;
+    closeModal();
+    showScreen('game-screen');
+    spawnEnemy();
+    renderAll();
+    startTimer();
+    toast('Save imported!');
+    saveGame();
+  } catch(e) {
+    try {
+      // Fallback for plain btoa
+      const raw = document.getElementById('import-data').value.trim();
+      const data = JSON.parse(atob(raw));
+      if (!data.party) throw new Error('Invalid');
+      G = data;
+      sanitizeState();
+      selectedCharId = G.party[0].id;
+      closeModal();
+      showScreen('game-screen');
+      spawnEnemy();
+      renderAll();
+      startTimer();
+      toast('Save imported!');
+      saveGame();
+    } catch(e2) {
+      toast('Invalid save data');
+    }
+  }
+}
+
+function checkExistingSave() {
+  const raw = localStorage.getItem('darkstar_idle_save');
+  if (raw) {
+    try {
+      const d = JSON.parse(raw);
+      document.getElementById('continue-btn').classList.remove('hidden');
+      document.getElementById('save-info').textContent = `Local Save Found — Stage ${d.stage || 1} • Prestige ${d.prestige || 0} • ${d.party?.[0]?.name || 'Unknown'}`;
+    } catch(e) {}
+  }
+}
+
+// ==================== UI RENDER ====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showModal(html) {
+  clearInterval(adTimerInterval);
+  const closeBtn = document.getElementById('modal-close-btn');
+  if (closeBtn) closeBtn.classList.remove('hidden');
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+
+function closeModal() {
+  clearInterval(adTimerInterval);
+  document.getElementById('modal-overlay').classList.add('hidden');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  el.classList.remove('hidden');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.add('hidden'), 2500);
+}
+
+function addLog(msg, cls = 'text-gray-300') {
+  const log = document.getElementById('battle-log');
+  if (!log) return;
+  const div = document.createElement('div');
+  div.className = `log-entry ${cls}`;
+  div.textContent = msg;
+  log.appendChild(div);
+  while (log.children.length > 40) log.removeChild(log.firstChild);
+  log.scrollTop = log.scrollHeight;
+}
+
+function formatSec(s) {
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${m}:${r.toString().padStart(2, '0')}`;
+}
+
+function renderParty() {
+  const list = document.getElementById('party-list');
+  if (!list || !G) return;
+  const maxParty = getMaxPartySize();
+  const countEl = document.getElementById('party-count');
+  if (countEl) countEl.textContent = `${G.party.length}/${maxParty}`;
+
+  list.innerHTML = G.party.map(c => {
+    const hpPct = Math.max(0, (c.hp / c.maxHp) * 100);
+    const hpCls = hpPct < 30 ? 'low' : hpPct < 60 ? 'mid' : '';
+    const sel = c.id === selectedCharId ? 'ring-1 ring-blue-400' : '';
+    const sexIcon = c.gender === 'Male' ? '♂' : c.gender === 'Female' ? '♀' : '⬡';
+    return `<div data-cid="${c.id}" onclick="selectChar(${c.id})" class="card neon-border p-2 cursor-pointer hover:bg-blue-900/20 transition ${sel} ${c.hp<=0?'opacity-50':''}">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">${c.subjob ? JOBS[c.job].subs[c.subjob].emoji : JOBS[c.job].emoji}</span>
+          <div>
+            <div class="font-bold text-sm leading-tight">${esc(c.name)} <span class="text-xs text-gray-400">${sexIcon}</span> ${c.isLeader?'⭐':''}</div>
+            <div class="text-xs text-gray-500">Lv.${c.level} ${getJobDisplay(c).split(' ').slice(1).join(' ')}</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-gray-400">${c.hp}/${c.maxHp}</div>
+          ${G.party.length > 1 ? `<button onclick="event.stopPropagation();moveToRoster(${c.id})" class="text-xs text-gray-600 hover:text-red-400">✕</button>` : ''}
+        </div>
+      </div>
+      <div class="hp-bar mt-1.5"><div class="hp-fill ${hpCls}" style="width:${hpPct}%"></div></div>
+      <div class="hp-bar mt-1 h-1"><div class="exp-fill" style="width:${(c.exp/c.expToLevel)*100}%"></div></div>
+    </div>`;
+  }).join('');
+
+  // Roster
+  const roster = document.getElementById('roster-list');
+  if (roster) {
+    if (G.roster.length === 0) {
+      roster.innerHTML = '<p class="text-gray-600 text-xs">Empty — recruit more operatives</p>';
+    } else {
+      roster.innerHTML = G.roster.map(c => `
+        <div onclick="swapToParty(${c.id})" class="flex justify-between items-center p-1.5 rounded hover:bg-blue-900/20 cursor-pointer text-xs">
+          <span>${c.subjob ? JOBS[c.job].subs[c.subjob].emoji : JOBS[c.job].emoji} ${esc(c.name)} Lv.${c.level}</span>
+          <span class="text-green-400">+ Party</span>
+        </div>
+      `).join('');
+    }
+  }
+}
+
+function renderCharDetail() {
+  const el = document.getElementById('char-detail');
+  if (!el || !G) return;
+  const c = findChar(selectedCharId) || G.party[0];
+  if (!c) { el.innerHTML = ''; return; }
+  const skill = getSkill(c);
+  el.innerHTML = `
+    <div class="text-center mb-2">
+      <div class="text-3xl mb-1">${c.subjob ? JOBS[c.job].subs[c.subjob].emoji : JOBS[c.job].emoji}</div>
+      <div class="font-orbitron font-bold">${esc(c.name)}</div>
+      <div class="text-xs text-gray-400">${esc(c.gender)} • ${getJobDisplay(c)}</div>
+    </div>
+    <div class="grid grid-cols-2 gap-1.5 text-xs mb-3">
+      <div class="bg-black/40 rounded p-1.5 text-center"><div class="text-gray-500">LVL</div><div class="font-bold text-blue-300">${c.level}</div></div>
+      <div class="bg-black/40 rounded p-1.5 text-center"><div class="text-gray-500">EXP</div><div class="font-bold text-blue-300">${c.exp}/${c.expToLevel}</div></div>
+      <div class="bg-black/40 rounded p-1.5 text-center"><div class="text-gray-500">ATK</div><div class="font-bold text-red-300">${c.atk}</div></div>
+      <div class="bg-black/40 rounded p-1.5 text-center"><div class="text-gray-500">DEF</div><div class="font-bold text-cyan-300">${c.def}</div></div>
+      <div class="bg-black/40 rounded p-1.5 text-center"><div class="text-gray-500">SPD</div><div class="font-bold text-green-300">${c.spd}</div></div>
+      <div class="bg-black/40 rounded p-1.5 text-center"><div class="text-gray-500">CRIT</div><div class="font-bold text-yellow-300">${c.crit}%</div></div>
+    </div>
+    <div class="text-xs bg-purple-950/30 border border-purple-500/20 rounded p-2">
+      <div class="font-bold text-purple-300">✨ ${skill.name}</div>
+      <div class="text-gray-400">${skill.desc || 'Powerful special attack'} • x${skill.mult} dmg</div>
+      <div class="text-gray-500 mt-0.5">CD: ${c.skillCd > 0 ? c.skillCd + ' turns' : 'Ready'}</div>
+    </div>
+  `;
+}
+
+function renderEnemy() {
+  const e = G?.enemy;
+  if (!e) {
+    document.getElementById('enemy-name').textContent = 'No enemy';
+    document.getElementById('enemy-level').textContent = '—';
+    document.getElementById('enemy-emoji').textContent = '☁️';
+    document.getElementById('enemy-hp-bar').style.width = '0%';
+    document.getElementById('enemy-hp-text').textContent = '—';
+    document.getElementById('enemy-atk-text').textContent = '';
+    return;
+  }
+  document.getElementById('enemy-name').textContent = e.name;
+  document.getElementById('enemy-level').textContent = `Lv.${e.level}${e.isBoss ? ' BOSS' : ''}`;
+  document.getElementById('enemy-emoji').textContent = e.emoji;
+  const pct = Math.max(0, (e.hp / e.maxHp) * 100);
+  const bar = document.getElementById('enemy-hp-bar');
+  bar.style.width = pct + '%';
+  bar.className = 'hp-fill ' + (pct < 30 ? 'low' : pct < 60 ? 'mid' : '');
+  document.getElementById('enemy-hp-text').textContent = `${e.hp}/${e.maxHp}`;
+  document.getElementById('enemy-atk-text').textContent = `ATK ${e.atk}`;
+}
+
+function updateHUD() {
+  if (!G) return;
+  document.getElementById('hud-gold').textContent = G.gold;
+  document.getElementById('hud-gems').textContent = G.gems;
+  document.getElementById('hud-stage').textContent = G.stage;
+  document.getElementById('stage-kills').textContent = `${G.stageKills}/10`;
+  document.getElementById('stage-bar').style.width = (G.stageKills / 10 * 100) + '%';
+  document.getElementById('stat-kills').textContent = G.totalKills;
+  document.getElementById('stat-gold').textContent = G.totalGold;
+  document.getElementById('stat-stage').textContent = G.highestStage;
+
+  // VIP badge
+  const vipBadge = document.getElementById('vip-badge');
+  if (vipBadge) vipBadge.classList.toggle('hidden', !G.vip);
+
+  // Active Ad Boosts bar
+  const boostBar = document.getElementById('active-boosts-bar');
+  const boostTags = document.getElementById('boost-tags');
+  const indicator = document.getElementById('ad-boost-indicator');
+  const tags = [];
+  if (G.adBoosts?.gold2x > 0) tags.push(`<span class="px-2 py-0.5 rounded bg-yellow-500/20 border border-yellow-400/40 text-yellow-300 font-orbitron">🪙 2x GOLD ${formatSec(G.adBoosts.gold2x)}</span>`);
+  if (G.adBoosts?.dmg2x > 0) tags.push(`<span class="px-2 py-0.5 rounded bg-red-500/20 border border-red-400/40 text-red-300 font-orbitron">⚡ 2x DMG ${formatSec(G.adBoosts.dmg2x)}</span>`);
+  if (G.vip) tags.push(`<span class="px-2 py-0.5 rounded bg-purple-500/20 border border-purple-400/40 text-purple-200 font-orbitron">👑 COMMANDER 1.5x</span>`);
+
+  if (tags.length > 0) {
+    boostBar.classList.remove('hidden');
+    boostTags.innerHTML = tags.join('');
+    if (indicator) indicator.classList.remove('hidden');
+  } else {
+    boostBar.classList.add('hidden');
+    if (indicator) indicator.classList.add('hidden');
+  }
+}
+
+function updateAdvancementPanel() {
+  const info = document.getElementById('advancement-info');
+  const choices = document.getElementById('subjob-choices');
+  if (!G) return;
+  const c = findChar(selectedCharId) || G.party[0];
+  if (!c) return;
+
+  if (c.subjob) {
+    const sub = JOBS[c.job].subs[c.subjob];
+    info.innerHTML = `<span class="text-purple-300">${esc(c.name)}</span> is a <strong>${sub.emoji} ${sub.name}</strong>. Sub-job path mastered.`;
+    choices.classList.add('hidden');
+  } else if (c.level >= 10) {
+    info.innerHTML = `<span class="text-yellow-300">${esc(c.name)}</span> reached Lv.10! Choose 1 of 2 sub-job specializations:`;
+    choices.classList.remove('hidden');
+    const subs = JOBS[c.job].subs;
+    choices.innerHTML = Object.entries(subs).map(([k, s]) => `
+      <button onclick="advanceJob(${c.id}, '${k}')" class="btn-purple w-full p-3 rounded-lg text-left">
+        <div class="font-orbitron font-bold">${s.emoji} ${s.name}</div>
+        <div class="text-xs text-gray-400 mt-0.5">${s.desc}</div>
+        <div class="text-xs text-purple-300/70 mt-1">Skill: ${s.skill.name} (x${s.skill.mult})</div>
+      </button>
+    `).join('');
+  } else {
+    const subs = Object.values(JOBS[c.job].subs).map(s => `${s.emoji} ${s.name}`).join(' or ');
+    info.innerHTML = `${esc(c.name)} unlocks <span class="text-blue-300">${subs}</span> at Level 10 (now Lv.${c.level}). <span class="text-gray-500">${10 - c.level} levels to go.</span>`;
+    choices.classList.add('hidden');
+  }
+}
+
+function renderAll() {
+  renderParty();
+  renderCharDetail();
+  renderEnemy();
+  updateHUD();
+  updateAdvancementPanel();
+}
+
+function flashEnemy() {
+  const pan = document.getElementById('enemy-panel');
+  pan.classList.add('dmg-flash');
+  setTimeout(() => pan.classList.remove('dmg-flash'), 400);
+}
+
+function flashChar(id) {
+  const el = document.querySelector(`[data-cid="${id}"]`);
+  if (el) {
+    el.classList.add('dmg-flash');
+    setTimeout(() => el.classList.remove('dmg-flash'), 400);
+  }
+}
+
+// ==================== CREATION ====================
+function startNewGame() {
+  initAudio();
+  sfx('click');
+  creation = { gender: null, job: null };
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.job-card').forEach(b => b.classList.remove('selected'));
+  document.getElementById('create-btn').classList.add('opacity-50', 'pointer-events-none');
+  showScreen('creation-screen');
+}
+
+function selectGender(g) {
+  creation.gender = g;
+  sfx('click');
+  document.querySelectorAll('#creation-screen .gender-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.g === g);
+  });
+  checkCreationReady();
+}
+
+function selectJob(j) {
+  creation.job = j;
+  sfx('click');
+  document.querySelectorAll('#creation-screen .job-card').forEach(b => {
+    b.classList.toggle('selected', b.dataset.job === j);
+  });
+  checkCreationReady();
+}
+
+function checkCreationReady() {
+  const btn = document.getElementById('create-btn');
+  if (creation.gender && creation.job) {
+    btn.classList.remove('opacity-50', 'pointer-events-none');
+  } else {
+    btn.classList.add('opacity-50', 'pointer-events-none');
+  }
+}
+
+function confirmCreation() {
+  if (!creation.gender || !creation.job) return;
+  initAudio();
+  sfx('win');
+  const name = document.getElementById('char-name').value.trim() || 'Nova';
+  G = defaultState();
+  const hero = createCharacter(name, creation.gender, creation.job, true);
+  G.party = [hero];
+  selectedCharId = hero.id;
+
+  showScreen('game-screen');
+  spawnEnemy();
+  renderAll();
+  startTimer();
+  addLog(`🌟 ${name} (${creation.gender}) enters the Darkstar sector...`, 'text-blue-300');
+  addLog(`Path chosen: ${JOBS[creation.job].emoji} ${JOBS[creation.job].name}`, 'text-gray-400');
+  toast(`Welcome, ${name}!`);
+  saveGame();
+
+  setTimeout(() => { if (!battleRunning) toggleBattle(); }, 800);
+}
+
+// ==================== TIMER ====================
+function startTimer() {
+  clearInterval(gameTimer);
+  gameTimer = setInterval(() => {
+    if (!G) return;
+    G.playTime++;
+    if (G.adBoosts?.gold2x > 0) G.adBoosts.gold2x--;
+    if (G.adBoosts?.dmg2x > 0) G.adBoosts.dmg2x--;
+
+    const m = Math.floor(G.playTime / 60).toString().padStart(2, '0');
+    const s = (G.playTime % 60).toString().padStart(2, '0');
+    document.getElementById('hud-time').textContent = `${m}:${s}`;
+    updateHUD();
+    // Autosave every 30s
+    if (G.playTime % 30 === 0) saveGame();
+  }, 1000);
+}
+
+// ==================== STARS BG ====================
+function createStars() {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.setProperty('--dur', (1.5 + Math.random() * 3) + 's');
+    s.style.animationDelay = Math.random() * 3 + 's';
+    s.style.width = s.style.height = (1 + Math.random() * 2) + 'px';
+    c.appendChild(s);
+  }
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  createStars();
+  checkExistingSave();
+
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    const closeBtn = document.getElementById('modal-close-btn');
+    if (e.target === e.currentTarget && (!closeBtn || !closeBtn.classList.contains('hidden'))) {
+      closeModal();
+    }
+  });
+});
+
+window.addEventListener('beforeunload', () => {
+  if (G) saveGame();
+});
+// iPhone/iPad Safari often skips beforeunload, so also save when the page is hidden
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && G) saveGame();
+});
+window.addEventListener('pagehide', () => {
+  if (G) saveGame();
+});
+
+// Offline support + "Add to Home Screen"
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+// Ask the browser to keep saves even when storage is low
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().catch(() => {});
+}
+</script>
+</body>
+</html>
